@@ -279,6 +279,29 @@ if (isOpenAI) {
     config.agents.defaults.model.primary = 'anthropic/claude-opus-4-5';
 }
 
+// Browser CDP configuration for Cloudflare Browser Rendering
+if (process.env.CDP_SECRET && process.env.WORKER_URL) {
+    const workerUrl = process.env.WORKER_URL.replace(/\/+$/, '');
+    const cdpUrl = workerUrl + '/cdp?secret=' + encodeURIComponent(process.env.CDP_SECRET);
+    config.browser = config.browser || {};
+    config.browser.profiles = config.browser.profiles || {};
+    config.browser.profiles.cloudflare = {
+        cdpUrl: cdpUrl,
+        color: '#F6821F'  // Cloudflare orange
+    };
+    // Set as default profile
+    config.browser.defaultProfile = 'cloudflare';
+    console.log('Configured browser profile with CDP URL:', cdpUrl.replace(/secret=.*/, 'secret=***'));
+}
+
+// Enable bird skill for Twitter/X integration
+config.skills = config.skills || {};
+config.skills.entries = config.skills.entries || {};
+config.skills.entries.bird = {
+    enabled: true
+};
+console.log('Enabled bird skill for Twitter/X');
+
 // Write updated config
 fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
 console.log('Configuration updated successfully');

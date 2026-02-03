@@ -25,6 +25,9 @@ RUN npm install -g pnpm
 RUN npm install -g clawdbot@2026.1.24-3 \
     && clawdbot --version
 
+# Install bird CLI for Twitter/X skill
+RUN npm install -g @steipete/bird
+
 # Create moltbot directories (paths still use clawdbot until upstream renames)
 # Templates are stored in /root/.clawdbot-templates for initialization
 RUN mkdir -p /root/.clawdbot \
